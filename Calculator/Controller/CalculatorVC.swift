@@ -13,6 +13,7 @@ class CalculatorVC: UIViewController {
     @IBOutlet weak var displayLabel: UILabel!
     
     private var isFinishedTypingNumber : Bool = true
+    
     private var displayValue : Double {
         get {
             guard let number = Double(displayLabel.text!) else {
@@ -21,9 +22,11 @@ class CalculatorVC: UIViewController {
             }
             return number
         } set {
-            if String(newValue) == "inf" {
+            if String(newValue) == "inf" || String(newValue) == "nan"{
+                displayLabel.fadeTransition(0.05)
                 displayLabel.text = "Not a number"
             } else {
+                displayLabel.fadeTransition(0.05)
             displayLabel.text = String(newValue)
         }
         }
@@ -54,7 +57,7 @@ class CalculatorVC: UIViewController {
     @IBAction func numButtonPressed(_ sender: UIButton) {
         //What should happen when a number is entered into the keypad
         
-        if let numValue = sender.currentTitle {
+        if var numValue = sender.currentTitle {
             if isFinishedTypingNumber {
             displayLabel.text = numValue
                 isFinishedTypingNumber = false
@@ -62,10 +65,13 @@ class CalculatorVC: UIViewController {
                 
                 
                 if numValue == "." {
-                    let isInt = floor(displayValue) == displayValue
-                    if !isInt {
+                    if let dispVal = displayLabel.text {
+                    if dispVal.contains("."){
                         return
+                    } else {
+                        numValue = "."
                     }
+                }
                 }
                 displayLabel.text = displayLabel.text! + numValue
             }
